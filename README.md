@@ -1,7 +1,7 @@
 # Introduction 
-This package provides python interface for connecting to and programming Plezmo elements. Plezmo is a simple and modern way to learn, play and innovate with technology! For more information about Plezmo, visit https://plezmo.com.
+This repository has examples of how to use **plezmo** python package for connecting to and programming Plezmo elements. Plezmo is a simple and modern way to learn, play and innovate with technology! For more information about Plezmo, visit https://plezmo.com.
 
-This package requires python 3.7. SDK does not yet support element administration (upgrades, rename, custom file transfer). Users are advised to use Plezmo app for such purposes. 
+These examples require python 3.7.
 
 # Requirements
 + Plezmo Wireless Adapter
