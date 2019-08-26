@@ -38,6 +38,8 @@ Verify that the package is installed by running 'pip3 show plezmo'. It should sh
 
 # Running examples
 
+Install packages required by examples by running 'pip install -r requirements.txt' in python-sdk-examples directory.
+
 1. Clone repository https://github.com/plezmo/python-sdk-examples
 2. Examples are present in directory 'examples'
 2. All examples accept Plezmo element name as command line input.

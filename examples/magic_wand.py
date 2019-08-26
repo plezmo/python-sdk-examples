@@ -35,30 +35,36 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-# Tests functionality of display element.
-# Test needs 1 display element
+# This example is implementation of "Magic Wand" tutorial from plezmo app. Refer to this tutorial
+# to create magic wand and lamp using story kits. Place the motion sensor in the wand and light in element
+# in the lamp as indicated and start the example.
+import sys
 import time
 import traceback
 
 from plezmo import *
 from plezmo.utils.logger import Logger
 from plezmo.elements.element_types import PlezmoElementType
-from plezmo.elements.plezmo_display import *
-from plezmo.elements.plezmo_element import *
+from plezmo.elements.plezmo_motion import *
+from plezmo.elements.plezmo_light import *
 
 import utils
 
 logger = Logger()
 
+light_name = None
+
 def globalExceptionHandler(e):
     logger.info("###### Got exception {}".format(e))
 
 # Init bluetooth communication
-def init(display_name):
+def init(element_names):
     # Register global exception handler
     registerExceptionHandler(globalExceptionHandler)
     # Elements to connect
-    elementList = [{"name" : display_name, "type": PlezmoElementType.DISPLAY}]
+    elementList = [{"name" : element_names["motion"], "type": PlezmoElementType.MOTION},
+    {"name": element_names["light"], "type": PlezmoElementType.LIGHT}]
+
     connectedElements = []
     try:
         # connect to elements one by one
@@ -77,57 +83,82 @@ def init(display_name):
         return False
 
 # Main logic of the program
-def main(display_name):
+def main(element_names):
+    global light_name
     # Init bluetooth communication
-    success = init(display_name)
+    success = init(element_names)
     if success != True:
         # Bluetooth communication cannobe enabled, quit.
         plezmoApi.close()
         logger.error("Could not connect to all the required elements")
         return
 
-    # Register event handlers and call methods of display sensor
+    motion_name = element_names["motion"]
+    light_name = element_names["light"]
+    # Register event handlers
     try:
-        # show INBOX image on display
-        logger.info("Showing INBOX image")
-        Display.showImage(display_name, DisplayImage.INBOX)
-        time.sleep(5)
-        # clear display
-        logger.info("Clearing display")
-        Display.clearDisplay(display_name)
-        time.sleep(2)
-        # Show text on display
-        logger.info("Showing text on display line 2 and alignment center")
-        Display.showText(display_name, DisplayLine.TWO, TextAlignment.CENTER, "Hola!")
-        time.sleep(5)
-        # clear display
-        logger.info("Clearing display")
-        Display.clearDisplay(display_name)
-        time.sleep(2)
-        # set font size, text color
-        Display.setFontSize(display_name, FontSize.MEDIUM)
-        Display.setTextColor(display_name, DisplayBackground.RED)
-        logger.info("Set font size to MEDIUM, text color to RED")
-        Display.showText(display_name, DisplayLine.TWO, TextAlignment.CENTER, "RED!")
-        time.sleep(5)
-        # Set display background color
-        logger.info("Painting background color to BLUE")
-        Display.paintBackgroundColor(display_name, DisplayBackground.BLUE)
-        time.sleep(5)
-    except Exception as e:
-        logger.error("Failed to run display commands {}, ex {}".format(display_name, e))
-        traceback.print_exc()
+        # set event handlers for left/right/front/back/flat tilt
+        Motion.onTilt(motion_name, lelf_tilt_handler, Tilt.LEFT)
+        Motion.onTilt(motion_name, right_tilt_handler, Tilt.RIGHT)
+        Motion.onTilt(motion_name, front_tilt_handler, Tilt.FRONT)
+        Motion.onTilt(motion_name, back_tilt_handler, Tilt.BACK)
+        Motion.onFlat(motion_name, flat_handler)
+        logger.info("Registered event handlers for BACK/FRONT/LEFT/RIGHT/FLAT tilts.")
+        logger.info("Tilt the motion element in different directions to see the light element changes.")
+        logger.info("Press control-c to stop the program...")
+
+        # start an infinite loop so that the program runs forever
+        while True:
+            time.sleep(1000)
+
     finally:
+        logger.info("Stopping the program...")
         # Program completed, disconnect elements and quit
-        plezmoApi.disconnect(display_name)
+        plezmoApi.disconnect(motion_name)
+        time.sleep(1)
+        plezmoApi.disconnect(light_name)
         time.sleep(1)
         plezmoApi.close()
 
+@PlezmoEventHandler
+def lelf_tilt_handler():
+    logger.info("Turning on the light in RED color")
+    Light.turnOn(light_name, LightColor("#FF0000"), Percentage(100))
+
+@PlezmoEventHandler
+def right_tilt_handler():
+    logger.info("Turning on the light in GREEN color")
+    Light.turnOn(light_name, LightColor("#00FF00"), Percentage(100))
+
+@PlezmoEventHandler
+def front_tilt_handler():
+    logger.info("Turning on the light in BLUE color")
+    Light.turnOn(light_name, LightColor("#0000FF"), Percentage(100))
+
+@PlezmoEventHandler
+def back_tilt_handler():
+    logger.info("Turning on the light in YELLOW color")
+    Light.turnOn(light_name, LightColor("#FFFF00"), Percentage(100))
+
+@PlezmoEventHandler
+def flat_handler():
+    logger.info("Turning off the light")
+    Light.setState(light_name, LightState.OFF)
+
+def extract_element_names():
+    motion_name = None
+    light_name = None
+    if len(sys.argv) < 3:
+        return None
+    else:
+        motion_name = sys.argv[1]
+        light_name = sys.argv[2]
+        return {"motion": motion_name, "light": light_name}
+
 # Program starts here
 if __name__ == "__main__":
-    display_name = utils.extract_element_name()
-    if display_name == None:
-        logger.error("Display element name is mandatory, e.g. # python display_example.py Display")
+    element_names = extract_element_names()
+    if element_names == None:
+        logger.error("Motion and light element name is mandatory, e.g. # python magic_wand.py Motion Light")
     else:
-        main(display_name)
-    quit()
+        main(element_names)
