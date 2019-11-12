@@ -104,16 +104,20 @@ def kelvinToCelcius(temp):
 def fetchWeather(cityName):
     print("Fetching weather for {}".format(cityName))
     url = "http://api.openweathermap.org/data/2.5/weather?APPID=" + API_KEY + "&q=" + cityName
-    res = requests.get(url)
-    #print("response is {}".format(res.text))
-    data = json.loads(res.text)
-    weather = data.get("weather")
-    temp = data.get("main")
-    return { "currentTemp": kelvinToCelcius(temp.get("temp")),
+    #print(url)
+    try:
+       res = requests.get(url)
+       print("response is {}".format(res.text))
+       data = json.loads(res.text)
+       weather = data.get("weather")
+       temp = data.get("main")
+       return { "currentTemp": kelvinToCelcius(temp.get("temp")),
                 "maxTemp": kelvinToCelcius(temp.get("temp_min")),
                 "minTemp": kelvinToCelcius(temp.get("temp_max")),
                 "weather": weather[0].get("main")
-            }
+              }
+    except:
+       return None
 
 def globalExceptionHandler(e):
     pass
@@ -156,7 +160,7 @@ def main():
         print("Could not connect to all the required elements")
         return
 
-    Display.setFontSize(DISPLAY_NAME, FontSize.MEDIUM)
+    Display.setFontSize(DISPLAY_NAME, FontSize.SMALL)
 
     while True:
         # clear display
@@ -192,11 +196,14 @@ def main():
             # Show images on display and play audio on Music based on weather
             if weather.lower().find(CONST_RAIN) >= 0 or weather.lower().find(CONST_CLOUD) >= 0:
                 Display.showImage(DISPLAY_NAME, DisplayImage.CLOUDY)
+                Display.showText(DISPLAY_NAME, DisplayLine.FIVE, TextAlignment.CENTER, weather)
                 if weather.lower().find(CONST_RAIN) >= 0:
-                    Display.showText(DISPLAY_NAME, DisplayLine.TWO, TextAlignment.CENTER, "Rain!!")
-                Music.playAudio(MUSIC_NAME, Audio.RAIN)
+                    Music.playAudio(MUSIC_NAME, Audio.RAIN)
+                else:
+                    Music.playAudio(MUSIC_NAME, Audio.BIRDS_CHIRPING)
             else:
                 Display.showImage(DISPLAY_NAME, DisplayImage.SUNNY)
+                Display.showText(DISPLAY_NAME, DisplayLine.FIVE, TextAlignment.CENTER, weather)
                 Music.playAudio(MUSIC_NAME, Audio.BIRDS_CHIRPING)
         except Exception as e:
             pass
