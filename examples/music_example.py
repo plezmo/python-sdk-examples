@@ -68,7 +68,7 @@ def init(music_name):
     except Exception as e:
         # Disconnect and stop program if connection to element fails
         logger.error("Failed to connect to element, ex {}".format(e))
-        traceback.print_exc()
+        #traceback.print_exc()
         # Disconnect already connected elements
         for e in connectedElements:
             plezmoApi.disconnect(e["name"])
@@ -125,7 +125,7 @@ def main(music_name):
         time.sleep(5)
     except Exception as e:
         logger.error("Failed to run music commands {}, ex {}".format(music_name, e))
-        traceback.print_exc()
+        #traceback.print_exc()
     finally:
         # Program completed, disconnect elements and quit
         plezmoApi.disconnect(music_name)

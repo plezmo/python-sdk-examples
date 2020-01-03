@@ -112,7 +112,7 @@ def init(element_names):
     except Exception as e:
         # Disconnect and stop program if connection to element fails
         print(f'Err! Failed to connect to element, ex {e}')
-        traceback.print_exc()
+        #traceback.print_exc()
         # Disconnect already connected elements
         for e in connectedElements:
             pz.plezmoApi.disconnect(e["name"])
@@ -265,7 +265,7 @@ try:
 
 except Exception as e:
     print(f'Err! Failed to run commands: ex {e}')
-    traceback.print_exc()
+    #traceback.print_exc()
 
 finally:
     pzLog.info(f'End.')

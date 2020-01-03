@@ -108,7 +108,7 @@ def main(light_name):
             time.sleep(1000)
     except Exception as e:
         logger.error("Failed to run display commands {}, ex {}".format(light_name, e))
-        traceback.print_exc()
+        #traceback.print_exc()
     finally:
         # Program completed, disconnect elements and quit
         plezmoApi.disconnect(light_name)

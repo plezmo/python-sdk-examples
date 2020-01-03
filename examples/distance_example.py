@@ -69,7 +69,7 @@ def init(distance_name):
     except Exception as e:
         # Disconnect and stop program if connection to element fails
         logger.error("Failed to connect to element, ex {}".format(e))
-        traceback.print_exc()
+        #traceback.print_exc()
         # Disconnect already connected elements
         for e in connectedElements:
             plezmoApi.disconnect(e["name"])
@@ -101,7 +101,7 @@ def main(distance_name):
         logger.info("Got NEAR event after wait for")
     except Exception as e:
         logger.error("Failed to run distance commands {}, ex {}".format(distance_name, e))
-        traceback.print_exc()
+        #traceback.print_exc()
     finally:
         # Program completed, disconnect elements and quit
         plezmoApi.disconnect(distance_name)

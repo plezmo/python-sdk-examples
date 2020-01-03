@@ -200,7 +200,7 @@ def init():
     except Exception as e:
         # Disconnect and stop program if connection to element fails
         logger.error("Failed to connect to element, ex {}".format(e))
-        traceback.print_exc()
+        #traceback.print_exc()
         # Disconnect already connected elements
         for e in connectedElements:
             plezmoApi.disconnect(e["name"])
@@ -226,7 +226,7 @@ def main():
         time.sleep(20)
     except Exception as e:
         logger.error("Failed to run color commands {}, ex {}".format("Color", e))
-        traceback.print_exc()
+        #traceback.print_exc()
     finally:
         # Program completed, disconnect elements and quit
         plezmoApi.disconnect("Color")

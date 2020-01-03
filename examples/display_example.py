@@ -70,7 +70,7 @@ def init(display_name):
     except Exception as e:
         # Disconnect and stop program if connection to element fails
         logger.error("Failed to connect to element, ex {}".format(e))
-        traceback.print_exc()
+        #traceback.print_exc()
         # Disconnect already connected elements
         for e in connectedElements:
             plezmoApi.disconnect(e["name"])
@@ -116,7 +116,7 @@ def main(display_name):
         time.sleep(5)
     except Exception as e:
         logger.error("Failed to run display commands {}, ex {}".format(display_name, e))
-        traceback.print_exc()
+        #traceback.print_exc()
     finally:
         # Program completed, disconnect elements and quit
         plezmoApi.disconnect(display_name)
