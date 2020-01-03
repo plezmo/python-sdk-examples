@@ -12,6 +12,7 @@ This repository has examples of how to use **plezmo** python package for connect
 + Windows 7 and 10
 + MacOS
 + Ubuntu 16.04 and 18.04
++ Raspbian Buster (version 10) (Raspberry Pi 3 Model B+)
 
 # Installation
 
@@ -26,9 +27,9 @@ pip install plezmo
 ```
 Verify that the package is installed by running 'pip show plezmo'. It should show package information.
 
-### MacOS and Ubuntu
+### MacOS, Ubuntu and Raspbian
 
-For MacOS and Ubuntu, commands for python 3.7 and corresponding pip version can be *python3 and pip3* or *python3.7 and pip3.7*. Make sure that you find out if python 3.7 is installed and use the correct python command.
+For MacOS, Ubuntu and Raspbian, commands for python 3.7 and corresponding pip version can be *python3 and pip3* or *python3.7 and pip3.7*. Make sure that you find out if python 3.7 is installed and use the correct python command.
 
 ```python
 pip3 install plezmo
